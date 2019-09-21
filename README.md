@@ -78,3 +78,6 @@ If your actors share the node they are located in, you can be sure that your mes
 I worked on a Cabbify killer app so I am going to use the transportation bussiness domain as an example.
 [Taxi main](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_2/model/taxi/)
 [Taxi test](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_2/model/taxi/)
+ #### II.II Testing survivability
+By killing the actor and recovering its state from persistence we can prove its ready to survive crashes.
+[Testing survivability](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_2/model/taxi/TaxiAggregateSpec.scala)

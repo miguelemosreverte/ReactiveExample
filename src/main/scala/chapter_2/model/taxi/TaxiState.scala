@@ -1,6 +1,6 @@
 package chapter_2.model.taxi
 
-import chapter_2.model.ddd.{AbstractState, Event}
+import ddd.{AbstractState, Event}
 
 
 case class TaxiState(location: Coordinate) extends AbstractState{

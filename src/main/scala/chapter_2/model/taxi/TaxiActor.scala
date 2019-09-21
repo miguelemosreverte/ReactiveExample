@@ -1,25 +1,31 @@
 package chapter_2.model.taxi
 
-import akka.actor.ActorLogging
+import akka.ShardedEntity
+import akka.actor.{ActorLogging, Props}
 import akka.persistence.{PersistentActor, RecoveryCompleted, SnapshotOffer}
-import chapter_2.model.ddd.Event
+import ddd.{Event, GetState}
 
 class TaxiActor extends PersistentActor {
+  import TaxiActor._
   private var state = TaxiState(Coordinate(0,0))
 
+  context.actorOf()
   override def receiveCommand: Receive = {
-    case SetLocation(location) =>
+    case SetLocation(aggregateRoot,deliveryId,location) =>
       val evt = Located(location)
       persist(evt) { e =>
         state += e
-        val response = SetLocationSuccess(location)
+        val response = SetLocationSuccess(deliveryId, location)
         sender() ! response
       }
+    case GetState(aggregateRoot) =>
+      sender() ! state
+
 
 
   }
 
-  override def persistenceId: String = self.path.name
+  override def persistenceId: String = typeName + "-" + self.path.name
 
   override def receiveRecover: Receive = {
     case evt: Event =>
@@ -28,3 +34,11 @@ class TaxiActor extends PersistentActor {
       state = snapshot
   }
 }
+object TaxiActor extends ShardedEntity {
+
+  val typeName = "TaxiActor"
+
+  def props(): Props = Props(new TaxiActor)
+
+}
+

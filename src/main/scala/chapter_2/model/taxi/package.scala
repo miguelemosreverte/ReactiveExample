@@ -1,6 +1,6 @@
 package chapter_2.model
 
-import chapter_2.model.ddd._
+import ddd._
 
 package object taxi {
 
@@ -8,13 +8,15 @@ package object taxi {
   case class Coordinate(lat: Double, long: Double)
 
   // Events
-  case class Located(location: Coordinate) extends Event
+  case class Located(location: Coordinate) extends Event {
+    def name = "Located"
+  }
 
   // Commands
-  case class SetLocation(location: Coordinate) extends Command
+  case class SetLocation(aggregateRoot: String, deliveryId: BigInt, location: Coordinate) extends Command
 
   // Response
-  case class SetLocationSuccess(location: Coordinate) extends Command
+  case class SetLocationSuccess(deliveryId: BigInt, location: Coordinate) extends Response
 
 
 }

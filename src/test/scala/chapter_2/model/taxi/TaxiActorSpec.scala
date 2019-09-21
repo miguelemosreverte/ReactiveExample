@@ -1,8 +1,10 @@
 package chapter_2.model.taxi
 
-import akka.actor.{ActorRef, Props}
+import akka.RestartActorSupervisorFactory
+import akka.actor.{ActorRef, Kill, Props}
 import akka.pattern.ask
 import akka.util.Timeout
+import ddd.GetState
 import org.scalatest.Assertion
 import utils.Spec
 
@@ -19,7 +21,7 @@ class TaxiActorSpec extends Spec {
     "be reflected in TaxiActor state" in {
       for {
         a <- unitTest(
-          SetLocation(Coordinate(1, 1)), SetLocationSuccess(Coordinate(1, 1))
+          SetLocation("1",1, Coordinate(1, 1)), TaxiState(Coordinate(1, 1))
         )
       } yield a
     }
@@ -28,7 +30,8 @@ class TaxiActorSpec extends Spec {
 
   implicit val timeout: Timeout = Timeout(10 seconds)
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
-  val taxiActor: ActorRef = system.actorOf(Props(new TaxiActor()), "TaxiActor")
+  val supervisor = new RestartActorSupervisorFactory
+  val taxiActor: ActorRef = supervisor.create(TaxiActor.props(), "TaxiActor")
 
   type aggregateRoot = String
 
@@ -36,22 +39,34 @@ class TaxiActorSpec extends Spec {
     (taxiActor ? a).mapTo[SetLocationSuccess]
 
 
-  def set(a: SetLocation): Future[SetLocationSuccess] = {
+  def set(a: SetLocation): Future[TaxiState] = {
     for {
       response <- update(a)
-    } yield response
+      _ <- kill
+      state <- getState(a.aggregateRoot)
+    } yield state
   }
 
+  def getState(aggregateRoot: aggregateRoot = "1"): Future[TaxiState] =
+    (taxiActor ? GetState(aggregateRoot)).mapTo[TaxiState]
+
+
+  def kill: Future[Unit] = {
+    taxiActor ! Kill
+    Future {
+      Thread.sleep(1000)
+    }
+  }
   def unitTest(
                 command: SetLocation,
-                expectedResponse: SetLocationSuccess
+                expectedState: TaxiState
               ): Future[Assertion] =
 
     set(command)
       .map { response =>
 
         assert {
-          response == expectedResponse
+          response.location == expectedState.location
         }
 
       }
