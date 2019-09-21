@@ -53,8 +53,19 @@ I present you, an Actor that fails half the time. I call it, The Imperfect Actor
 
 # Chapter I
 ##  Alpakka Transaction to the rescue
-[Imperfect Actor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)  
+[Concrete Transaction implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_1/transaction/Transaction.scala)
   
-[Imperfect Actor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+[Transaction Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_1/TransactionSpec.scala)
 
 [- - Link to example by the Alpakka Team Github](https://github.com/akka/alpakka-kafka/blob/master/tests/src/test/scala/akka/kafka/scaladsl/TransactionsSpec.scala)
+
+
+# Chapter I revisited
+##  Typeclasses and genericity
+[Typeclass for Message serialization](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/serialization/JsonFormats.scala)
+Added a Typeclass for Message serialization.
+  This adds a method to a class without modifying the source code. * Open-Close principle, **check!** *
+
+[Generic Transaction implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_1/transaction/Transaction.scala)
+Added the extra complexity needed to make Transaction generic. Visit the previous commit for a simpler, more concrete idea of Transaction.
+

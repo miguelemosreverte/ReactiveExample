@@ -9,6 +9,7 @@ class ImperfectActor extends Actor {
   def receive: Receive = {
     case msg if acc != 1 =>
       acc += 1
+      println(msg)
       sender() ! msg
     case _ =>
       acc += 1

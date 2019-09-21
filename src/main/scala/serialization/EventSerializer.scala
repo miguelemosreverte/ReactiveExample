@@ -51,7 +51,7 @@ abstract class EventSerializer[A <: AnyRef: ClassTag](implicit serializer: JsonS
 
 object EventSerializer {
 
-  import serialization.JsonFormats.JsonModel.MessageSerializer.MessageEventSerializer
+  import serialization.JsonFormats.MessageSerializer.MessageEventSerializer
   private val map = Seq(
     classOf[MessageEventSerializer],
   )

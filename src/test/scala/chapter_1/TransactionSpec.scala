@@ -5,12 +5,11 @@ import akka.kafka.scaladsl.Producer
 import akka.kafka.{ConsumerSettings, ProducerSettings}
 import akka.pattern.ask
 import akka.stream.scaladsl.Source
+import akka.util.Timeout
 import introduction.ImperfectActor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
-import serialization.JsonFormats.MessageSerializer.Message
-import serialization.json.JsonSerializer
 import transaction.Transaction.□
 import utils.DocsSpecBase
 
@@ -22,7 +21,8 @@ class TransactionSpec extends DocsSpecBase(9095) {
     "hello there",
     "hello again"
   )
-  val serializer: JsonSerializer[Message] = serialization.JsonFormats.MessageSerializer.Serializer
+  import serialization.JsonFormats.MessageSerializer.MessageSerializerTypeClass._
+  import serialization.JsonFormats.MessageSerializer._
 
   lazy val results = executeTransaction(
     requests
@@ -30,7 +30,7 @@ class TransactionSpec extends DocsSpecBase(9095) {
         Message
       }
        map {
-      serializer.encode
+        _.encode
       }
   )
 
@@ -38,6 +38,7 @@ class TransactionSpec extends DocsSpecBase(9095) {
 
     for {
       r <- results
+      _ = println(r)
     } yield assert(requests.forall(request => r.toString.contains(request)))
 
   }
@@ -46,6 +47,8 @@ class TransactionSpec extends DocsSpecBase(9095) {
 
     implicit def toSeqF(a: Future[Message]): Future[Seq[Message]] = a.map(aa => Seq(aa))
 
+    import scala.concurrent.duration._
+    implicit val timeout: Timeout = Timeout(1.seconds)
     def getReply(message: Message): Future[Seq[Message]] =
       (imperfectActor ? message).mapTo[Message]
 
@@ -64,7 +67,7 @@ class TransactionSpec extends DocsSpecBase(9095) {
       case Done =>
         for {
           _ <- Future(
-            Thread.sleep(20000L)
+            Thread.sleep(40000L)
           ) map { _ =>
               control.shutdown()
             }
