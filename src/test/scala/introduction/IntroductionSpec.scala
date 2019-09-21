@@ -1,6 +1,6 @@
 package introduction
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{ ActorRef, Props }
 import akka.pattern.ask
 import akka.util.Timeout
 import utils.Spec
@@ -10,10 +10,8 @@ import scala.concurrent.duration._
 
 class IntroductionSpec extends Spec {
 
-
   "ImperfectActor" should {
     " should reply half the times" in {
-
 
       for {
         a <- getReply("Hello there!")
@@ -31,6 +29,5 @@ class IntroductionSpec extends Spec {
 
   implicit val timeout: Timeout = Timeout(10 seconds)
   val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()), "ImperfectActor")
-
 
 }
