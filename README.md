@@ -45,4 +45,6 @@ I present you, an Actor that fails half the time. I call it, The Imperfect Actor
 
 # Chapter I
 ##  The Imperfect Actor
+[Imperfect Actor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
 
+[Imperfect Actor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
