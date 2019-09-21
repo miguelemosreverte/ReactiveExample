@@ -3,13 +3,12 @@ package introduction
 import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import introduction.ImperfectActor
-import utils.ClusterPCSSpec
+import utils.Spec
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class IntroductionSpec extends ClusterPCSSpec {
+class IntroductionSpec extends Spec {
 
 
   "ImperfectActor" should {
