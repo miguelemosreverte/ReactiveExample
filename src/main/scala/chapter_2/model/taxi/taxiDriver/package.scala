@@ -1,6 +1,5 @@
 package chapter_2.model
 
-import chapter_2.model.taxi.Coordinate
 import ddd._
 
 package object taxiDriver {

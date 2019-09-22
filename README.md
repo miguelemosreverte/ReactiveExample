@@ -1,4 +1,5 @@
 
+
 # tip of the spear '19
 Welcome!
 In this repository you will find the full implemention of a common use case pattern, one that comes as a replacement for another extensively proven pattern.
@@ -87,3 +88,25 @@ Communication among them will work like method calls.
 [TaxiDriver main](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_2/model/taxi/taxiDriver)
 [TaxiDriver test](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_2/model/taxi/)
 
+# Chapter III
+## Different aggregates, different nodes.
+Here is where fun starts.
+In **Domain Driven Design** an Actor represents an Aggregate, and so, all communication between aggregates goes through network, with chance of failure.
+This is where some teams use Journal Pollers to listen to each other Aggregates events on the database. This achieves rock-solid communication, because it is written in hard disc.
+We are going to use Kafka instead. _Buckle up!_
+
+
+ #### III.I The right questions.
+ Given a taxi company.
+ The company wants to know how to locate it's fleet in a way that avoids common sense and is actually data driven.
+ Let's start talking domain language fist.
+ We will define a zone as a small part of a city.
+ - ##### Given a zone
+ [How many people are usually in the zone?]
+ (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/package.scala)
+ [How many people are usually in the zone around this hour?]
+ (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByHourOfDay/package.scala)
+ [How many people are usually in the zone this day of week?]
+ (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeek/package.scala)
+ [How many people are usually in the zone this day of week _around this hour_?]
+ (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zonebyDayOfWeekbyHourOfDay/package.scala)

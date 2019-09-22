@@ -3,7 +3,6 @@ package chapter_2.model.taxi.taxiDriver
 import akka.ShardedEntity
 import akka.actor.Props
 import akka.persistence.{PersistentActor, SnapshotOffer}
-import chapter_2.model.taxi.TaxiActor
 import chapter_2.model.taxiDriver.{ChangeDriver, ChangedDriver, Driver}
 import ddd.{Event, GetState}
 
