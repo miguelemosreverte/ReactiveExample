@@ -18,5 +18,8 @@ package object taxi {
   // Response
   case class SetLocationSuccess(deliveryId: BigInt, location: Coordinate) extends Response
 
+  // Queries
+  case class GetDriver(aggregateRoot: String) extends Query
+
 
 }

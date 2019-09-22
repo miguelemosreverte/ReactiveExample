@@ -1,9 +1,11 @@
 package chapter_2.model.taxi
 
 import akka.RestartActorSupervisorFactory
-import akka.actor.{ActorRef, Kill, Props}
+import akka.actor.{ActorRef, Kill}
 import akka.pattern.ask
 import akka.util.Timeout
+import chapter_2.model.taxi.taxiDriver.TaxiDriverState
+import chapter_2.model.taxiDriver.{ChangeDriver, Driver}
 import ddd.GetState
 import org.scalatest.Assertion
 import utils.Spec
@@ -17,16 +19,31 @@ class TaxiActorSpec extends Spec {
     utils.leveldb.LevelDBCleanup.cleanLevelDB()
   }
 
+  def toBigInt(i: Int): BigInt = BigInt(i)
+
+
   "Sending SetLocation command to TaxiActor" should {
     "be reflected in TaxiActor state" in {
       for {
         a <- unitTest(
-          SetLocation("1",1, Coordinate(1, 1)), TaxiState(Coordinate(1, 1))
+          SetLocation("1", 1, Coordinate(1, 1)), TaxiState(Coordinate(1, 1))
         )
       } yield a
     }
   }
+  "Sending ChangeDriver to TaxiActor" should {
+    "change driver" in {
+      for {
+        before <- (taxiActor ? GetDriver("1")).mapTo[TaxiDriverState]
+        _ =   taxiActor ! ChangeDriver("1", toBigInt(1), Driver(Some("1")))
+        after <- (taxiActor ? GetDriver("1")).mapTo[TaxiDriverState]
 
+      } yield assert(
+        before.driver == Driver(None)
+        && after.driver == Driver(Some("1"))
+      )
+    }
+  }
 
   implicit val timeout: Timeout = Timeout(10 seconds)
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
@@ -57,6 +74,7 @@ class TaxiActorSpec extends Spec {
       Thread.sleep(1000)
     }
   }
+
   def unitTest(
                 command: SetLocation,
                 expectedState: TaxiState
