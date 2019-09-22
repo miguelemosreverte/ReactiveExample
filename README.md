@@ -104,8 +104,8 @@ We are going to use Kafka instead. _Buckle up!_
  - ##### Given a zone
  [How many people are usually in the zone?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/package.scala)
  
- [How many people are usually in the zone around this hour?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByHourOfDay/package.scala)
+ [How many people are usually in the zone around this hour?](https://i.kym-cdn.com/photos/images/newsfeed/000/770/871/1a9.gif)
  
- [How many people are usually in the zone this day of week?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeek/package.scala)
+ [How many people are usually in the zone this day of week?](https://i.imgflip.com/jp9k8.jpg)
  
- [How many people are usually in the zone this day of week _around this hour_?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeekByHourOfDay/package.scala)
+ [How many people are usually in the zone this day of week _around this hour_?](https://i.kym-cdn.com/photos/images/newsfeed/000/574/293/c22.png)
