@@ -251,9 +251,9 @@ We are going to use Kafka instead. _Buckle up!_
 [Zone test](https://github.com/miguelemosreverte/ReactiveExample/blob/7f50767d0c00d8d2963619d63e7283e0cea5fd6c/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
 
   #### III.IV Designing the ZoneActor to answer queries
-[Zone main](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/ZoneActor.scala)
+[Zone main](https://github.com/miguelemosreverte/ReactiveExample/blob/6ce20c3cc9d43c5daa69eba335e7baf133d3474d/src/main/scala/chapter_3/model/zone/ZoneActor.scala)
 
-[Zone test](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
+[Zone test](https://github.com/miguelemosreverte/ReactiveExample/blob/6ce20c3cc9d43c5daa69eba335e7baf133d3474d/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
 
   #### III.V Custom Cluster Sharding
   By using GeoPoints as aggregateRoot we can say that all requests around an area should be processed by a specific node,
