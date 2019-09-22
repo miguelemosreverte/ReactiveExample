@@ -18,8 +18,8 @@ package object zone {
   }
 
   // Commands
-  case class PassengerArrived(aggregateRoot: String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
-  case class PassengerLeft(aggregateRoot:  String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
+  case class PassengerArrives(aggregateRoot: String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
+  case class PassengerLeaves(aggregateRoot:  String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
 
   // Response
   case class ArriveSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response
