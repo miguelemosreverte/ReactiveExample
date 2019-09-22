@@ -263,5 +263,5 @@ We are going to use Kafka instead. _Buckle up!_
 
 [Custom Sharding](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/akka/ShardedEntity.scala)
 
-[Zone test with GeoPoint sharding](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
+[Zone test with GeoPoint sharding](https://github.com/miguelemosreverte/ReactiveExample/blob/421cd09717b84604f133a4f8f9594a1c2877462a/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
 
