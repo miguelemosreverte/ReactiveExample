@@ -1,15 +1,24 @@
 package chapter_2.model.taxi
 
 import akka.ShardedEntity
-import akka.actor.{ActorLogging, Props}
+import akka.actor.{ActorLogging, ActorRef, Kill, Props, Terminated}
 import akka.persistence.{PersistentActor, RecoveryCompleted, SnapshotOffer}
+import akka.util.Timeout
+import chapter_2.model.taxi.taxiDriver.TaxiDriver
+import chapter_2.model.taxiDriver.ChangeDriver
 import ddd.{Event, GetState}
+
+import scala.concurrent.duration._
+import akka.pattern.{ask, pipe}
 
 class TaxiActor extends PersistentActor {
   import TaxiActor._
   private var state = TaxiState(Coordinate(0,0))
+  implicit val ec = context.system.dispatcher
+  implicit val timeout: Timeout = 1 second
 
-  context.actorOf()
+  val taxiDriver: ActorRef = context.actorOf(TaxiDriver.props())
+
   override def receiveCommand: Receive = {
     case SetLocation(aggregateRoot,deliveryId,location) =>
       val evt = Located(location)
@@ -21,7 +30,11 @@ class TaxiActor extends PersistentActor {
     case GetState(aggregateRoot) =>
       sender() ! state
 
+    case cmd:ChangeDriver =>
+      taxiDriver ! cmd
 
+    case GetDriver(aggregateRoot) =>
+      (taxiDriver ? GetState(aggregateRoot)).pipeTo(sender())
 
   }
 

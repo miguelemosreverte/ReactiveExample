@@ -55,7 +55,7 @@ I present you, an Actor that fails half the time. I call it, The Imperfect Actor
 ##  Alpakka Transaction to the rescue
 [Concrete Transaction implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_1/transaction/Transaction.scala)
 
-[Transaction Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_1/TransactionSpec.scala)
+[Transaction Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_1/chapter_1/transaction/TransactionSpec.scala)
 
 [- - Link to example by the Alpakka Team Github](https://github.com/akka/alpakka-kafka/blob/master/tests/src/test/scala/akka/kafka/scaladsl/TransactionsSpec.scala)
 
@@ -81,3 +81,9 @@ I worked on a Cabbify killer app so I am going to use the transportation bussine
  #### II.II Testing survivability
 By killing the actor and recovering its state from persistence we can prove its ready to survive crashes.
 [Testing survivability](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_2/model/taxi/TaxiAggregateSpec.scala)
+ #### II.III Two actors, same node. No network failures!
+If an actor creates a child actor and routes interactions to him, with no sharding, they will stay inside the same physical node.
+Communication among them will work like method calls.
+[TaxiDriver main](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_2/model/taxi/taxiDriver)
+[TaxiDriver test](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_2/model/taxi/)
+

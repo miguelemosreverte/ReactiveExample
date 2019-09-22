@@ -1,3 +1,5 @@
+package chapter_1.transaction
+
 
 import akka.Done
 import akka.actor.{ActorRef, Props}
@@ -79,7 +81,7 @@ class TransactionSpec extends DocsSpecBase(9095) {
 
   }
 
-  val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()))
+  val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()), "ImperfectActorTransactionalTest")
 
   val sourceTopic = "sourceTopic"
   val sinkTopic = "sinkTopic"

@@ -28,7 +28,7 @@ object Transaction {
                         producer: ProducerSettings[String, String],
                         decoder: JsonSerializer[Input],
                         encoder: JsonSerializer[Output]
-                      ): RunnableGraph[(UniqueKillSwitch, Future[immutable.Seq[String]])] = {
+                      ): RunnableGraph[(UniqueKillSwitch, Future[immutable.Seq[Seq[String]]])] = {
 
     type Msg = ConsumerMessage.TransactionalMessage[String, String]
 
@@ -36,7 +36,6 @@ object Transaction {
     implicit val ec: ExecutionContext = system.dispatcher
     import scala.concurrent.duration._
 
-    val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()), "ImperfectActor")
 
     var message: Msg = null
 
@@ -90,11 +89,11 @@ object Transaction {
     }
       .viaMat(KillSwitches.single)(Keep.right)
       .collect {
-        case a: ProducerMessage.Result[_, String, _] =>
-          a.message.record.value
+        case a: ProducerMessage.MultiResult[_, String, _] =>
+          a.parts.map(a => a.record.value)
 
       }
-      .toMat(Sink.seq[String])(Keep.both)
+      .toMat(Sink.seq[Seq[String]])(Keep.both)
 
   }
 
