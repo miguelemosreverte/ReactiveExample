@@ -4,7 +4,8 @@ import akka.ShardedEntity
 import akka.actor.Props
 import akka.persistence.{PersistentActor, SnapshotOffer}
 import chapter_2.model.taxiDriver.{ChangeDriver, ChangedDriver, Driver}
-import ddd.{Event, GetState}
+import ddd.Event
+import ddd.StringAggregateRoot.StringAggregateRoot.GetState
 
 class TaxiDriver extends PersistentActor {
   import TaxiDriver._

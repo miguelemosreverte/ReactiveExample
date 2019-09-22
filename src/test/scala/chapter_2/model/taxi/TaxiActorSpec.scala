@@ -6,7 +6,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import chapter_2.model.taxi.taxiDriver.TaxiDriverState
 import chapter_2.model.taxiDriver.{ChangeDriver, Driver}
-import ddd.GetState
+import ddd.StringAggregateRoot.StringAggregateRoot.GetState
 import org.scalatest.Assertion
 import utils.Spec
 

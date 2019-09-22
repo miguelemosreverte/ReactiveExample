@@ -5,7 +5,8 @@ import java.time.LocalDateTime
 import akka.ShardedEntity
 import akka.actor.Props
 import akka.persistence.{PersistentActor, SnapshotOffer}
-import ddd.{Event, GetState}
+import ddd.{Event}
+import ddd.StringAggregateRoot.StringAggregateRoot.{GetState => NormalGetState}
 
 class ZoneActor extends PersistentActor {
 
@@ -37,21 +38,9 @@ class ZoneActor extends PersistentActor {
     case GetState(aggregateRoot) =>
       sender() ! state
 
-      /*
+    case NormalGetState(aggregateRoot) =>
+      sender() ! state
 
-  case class HowManyPeopleAreUssuallyInTheZone(aggregateRoot: String) extends Query
-
-  //How many people are usually in the zone around this hour?
-  case class HowManyPeopleTodayAtThisHour(aggregateRoot: String) extends Query
-  case class HowManyPeopleAreUsuallyTodayAtThisHour(aggregateRoot: String) extends Query
-
-  //How many people are usually in the zone this day of week?
-  case class HowManyPeopleToday(aggregateRoot: String) extends Query
-  case class HowManyPeopleAreUsuallyToday(aggregateRoot: String) extends Query
-
-  //How many people are usually in the zone this day of week around this hour?
-  case class HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek(aggregateRoot: String) extends Query
-       */
     case a:HowManyPeopleAreUsuallyToday =>
       sender() ! state.perDay(a.toDayOfWeek).avg
     case a:HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek =>

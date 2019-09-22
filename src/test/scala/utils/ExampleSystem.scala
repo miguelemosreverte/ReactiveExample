@@ -6,5 +6,5 @@ import akka.actor.ActorSystem
   * Tests which requires an ActorSystem should extend from ExamplePCSSpec
   */
 final object ExampleSystem {
-  final lazy val system = ActorSystem("ExampleSystem")
+  final lazy val system = ActorSystem("Example")
 }

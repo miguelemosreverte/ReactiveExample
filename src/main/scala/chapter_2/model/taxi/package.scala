@@ -1,5 +1,6 @@
 package chapter_2.model
 
+import ddd.StringAggregateRoot.StringAggregateRoot.{Command, Query}
 import ddd._
 
 package object taxi {

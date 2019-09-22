@@ -6,10 +6,11 @@ import akka.persistence.{PersistentActor, RecoveryCompleted, SnapshotOffer}
 import akka.util.Timeout
 import chapter_2.model.taxi.taxiDriver.TaxiDriver
 import chapter_2.model.taxiDriver.ChangeDriver
-import ddd.{Event, GetState}
+import ddd.Event
 
 import scala.concurrent.duration._
 import akka.pattern.{ask, pipe}
+import ddd.StringAggregateRoot.StringAggregateRoot.GetState
 
 class TaxiActor extends PersistentActor {
   import TaxiActor._

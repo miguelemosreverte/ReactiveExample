@@ -2,7 +2,9 @@ package chapter_3.model
 
 import java.time.LocalDateTime
 
-import ddd.{Command, Event, Query, Response}
+import ddd._
+import ddd.GeoAggregateRoot.GeoAggregateRoot._
+import geojson.GeoPoint
 
 package object zone {
 
@@ -19,9 +21,17 @@ package object zone {
   }
 
   // Commands
-  case class PassengerArrives(aggregateRoot: String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
+  case class PassengerArrives(
+                               aggregateRoot: GeoPoint,
+                               deliveryId: BigInt,
+                               timestamp: LocalDateTime)
+    extends Command
 
-  case class PassengerLeaves(aggregateRoot: String, deliveryId: BigInt, timestamp: LocalDateTime) extends Command
+  case class PassengerLeaves(
+                              aggregateRoot: GeoPoint,
+                              deliveryId: BigInt,
+                              timestamp: LocalDateTime)
+    extends Command
 
   // Response
   case class ArriveSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response
@@ -30,28 +40,30 @@ package object zone {
 
 
   // Queries
+  case class GetState(aggregateRoot: GeoPoint) extends Query
+
   //How many people are usually in the zone?
-  case class HowManyPeopleAreUssuallyInTheZone(aggregateRoot: String) extends Query
+  case class HowManyPeopleAreUssuallyInTheZone(aggregateRoot: GeoPoint) extends Query
 
   //How many people are usually in the zone around this hour?
-  case class HowManyPeopleTodayAtThisHour(aggregateRoot: String) extends Query
+  case class HowManyPeopleTodayAtThisHour(aggregateRoot: GeoPoint) extends Query
 
-  case class HowManyPeopleAreUsuallyTodayAtThisHour(aggregateRoot: String) extends Query
+  case class HowManyPeopleAreUsuallyTodayAtThisHour(aggregateRoot: GeoPoint) extends Query
 
   //How many people are usually in the zone this day of week?
   case class HowManyPeopleToday(
-                                 aggregateRoot: String,
+                                 aggregateRoot: GeoPoint,
                                  day: LocalDateTime = LocalDateTime.now) extends Query
 
   case class HowManyPeopleAreUsuallyToday(
-                                           aggregateRoot: String,
+                                           aggregateRoot: GeoPoint,
                                            day: LocalDateTime) extends Query {
     def toDayOfWeek = day.getDayOfWeek
   }
 
   //How many people are usually in the zone this day of week around this hour?
   case class HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek(
-                                                                     aggregateRoot: String,
+                                                                     aggregateRoot: GeoPoint,
                                                                      day: LocalDateTime) extends Query {
     def toDayOfWeek = day.getDayOfWeek
     def toHour = day.getHour

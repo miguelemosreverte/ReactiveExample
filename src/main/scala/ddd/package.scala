@@ -1,27 +1,23 @@
-package ddd
+package object ddd {
+
+  trait Response {
+    def deliveryId: BigInt
+  }
+
+  trait Event {
+    def name: String
+  }
+
+  trait AbstractQuery[A] {
+    def aggregateRoot: A
+  }
+  trait AbstractCommand[A] {
+    def aggregateRoot: A
+  }
+
+  trait AbstractState {
+    def +(event: Event): AbstractState
+  }
 
 
-trait Command extends Product with Serializable {
-  def aggregateRoot: String
-
-  def deliveryId: BigInt
 }
-
-trait Query {
-  def aggregateRoot: String
-}
-
-trait Response {
-  def deliveryId: BigInt
-}
-
-trait Event {
-  def name: String
-}
-
-final case class GetState(aggregateRoot: String) extends Query
-
-trait AbstractState {
-  def +(event: Event): AbstractState
-}
-
