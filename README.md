@@ -110,3 +110,6 @@ We are going to use Kafka instead. _Buckle up!_
  (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeek/package.scala)
  [How many people are usually in the zone this day of week _around this hour_?]
  (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zonebyDayOfWeekbyHourOfDay/package.scala)
+  #### III.I Designing the state of Zone
+[Zone main](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/ZoneState.scala)
+[Zone test](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_3/model/zone/ZoneStateSpec.scala)
