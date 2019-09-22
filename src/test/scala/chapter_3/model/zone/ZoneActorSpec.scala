@@ -1,11 +1,13 @@
 package chapter_3.model.zone
 
+import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, Instant, LocalDateTime, ZoneOffset}
 
 import akka.RestartActorSupervisorFactory
 import akka.actor.{ActorRef, Kill}
 import akka.pattern.ask
 import akka.util.Timeout
+import chapter_3.model.zone.services.Queries.AverageOf
 import ddd.{Command, GetState, Response}
 import org.scalatest.Assertion
 import utils.Spec
@@ -19,29 +21,50 @@ class ZoneActorSpec extends Spec {
     utils.leveldb.LevelDBCleanup.cleanLevelDB()
   }
 
+  val givenDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(7000), ZoneOffset.UTC)
+  val perDay = givenDate.truncatedTo(ChronoUnit.DAYS)
+  val perHour = givenDate.truncatedTo(ChronoUnit.HOURS)
 
+  val nextThursday = givenDate.plus(7, ChronoUnit.DAYS)
+
+  val aggregateRoot = "1"
+  val deliveryId = 1
   "Passengers arrivals" should {
     "be reflected in ZoneActor state" in {
       for {
         a <- unitTest(
-          PassengerArrives("1", 1, LocalDateTime.ofInstant(Instant.ofEpochMilli(7000), ZoneOffset.UTC)),
+          PassengerArrives(aggregateRoot, deliveryId, givenDate),
           ZoneState(
             passengers = 1,
-            Map(DayOfWeek.THURSDAY -> 1),
-            Map(0 -> 1),
-            Map(DayOfWeek.THURSDAY -> Map(0 -> 1))
+            Map(DayOfWeek.THURSDAY -> AverageOf(1, Set(perDay))),
+            Map(0 -> AverageOf(1, Set(perHour))),
+            Map(DayOfWeek.THURSDAY -> Map(0 -> AverageOf(1, Set(perHour))))
           )
         )
         b <- unitTest(
-          PassengerLeaves("1", 1, LocalDateTime.ofInstant(Instant.ofEpochMilli(7000), ZoneOffset.UTC)),
+          PassengerLeaves(aggregateRoot, deliveryId, givenDate),
           ZoneState(
             passengers = 0,
-            Map(DayOfWeek.THURSDAY -> 0),
-            Map(0 -> 0),
-            Map(DayOfWeek.THURSDAY -> Map(0 -> 0))
+            Map(DayOfWeek.THURSDAY -> AverageOf(1, Set(perDay))),
+            Map(0 -> AverageOf(1, Set(perHour))),
+            Map(DayOfWeek.THURSDAY -> Map(0 -> AverageOf(1, Set(perHour))))
           )
         )
-      } yield a
+
+        _ <- update(PassengerArrives(aggregateRoot, deliveryId, givenDate))
+        _ <- update(PassengerArrives(aggregateRoot, deliveryId, givenDate))
+        _ <- update(PassengerArrives(aggregateRoot, deliveryId, givenDate))
+        _ <- update(PassengerArrives(aggregateRoot, deliveryId, nextThursday))
+
+        state <- getState()
+        actorSays <- zoneActor ? HowManyPeopleAreUsuallyToday(aggregateRoot, givenDate)
+        actorSaysWithMoreSpecificity <- zoneActor ? HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek(aggregateRoot, givenDate)
+
+      } yield assert(
+        state.perDay(perDay.getDayOfWeek).avg == 2.5 
+          && actorSays == 2.5
+          && actorSaysWithMoreSpecificity == 2.5
+      )
     }
   }
 
@@ -64,7 +87,7 @@ class ZoneActorSpec extends Spec {
     } yield state
   }
 
-  def getState(aggregateRoot: aggregateRoot = "1"): Future[ZoneState] =
+  def getState(aggregateRoot: aggregateRoot = aggregateRoot): Future[ZoneState] =
     (zoneActor ? GetState(aggregateRoot)).mapTo[ZoneState]
 
 
@@ -85,9 +108,9 @@ class ZoneActorSpec extends Spec {
 
         assert {
           response.passengers == expectedState.passengers &&
-            response.passengersPerDay == expectedState.passengersPerDay &&
-            response.passengersPerHourOfDay == expectedState.passengersPerHourOfDay &&
-            response.passengersPerDayPerHourOfDay == expectedState.passengersPerDayPerHourOfDay
+            response.perDay == expectedState.perDay &&
+          response.perHourOfDay == expectedState.perHourOfDay &&
+            response.perDayPerHourOfDay == expectedState.perDayPerHourOfDay
         }
 
       }
