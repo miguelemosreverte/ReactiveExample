@@ -102,11 +102,10 @@ We are going to use Kafka instead. _Buckle up!_
  Let's start talking domain language fist.
  We will define a zone as a small part of a city.
  - ##### Given a zone
- [How many people are usually in the zone?]
- (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/package.scala)
- [How many people are usually in the zone around this hour?]
- (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByHourOfDay/package.scala)
- [How many people are usually in the zone this day of week?]
- (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeek/package.scala)
- [How many people are usually in the zone this day of week _around this hour_?]
- (https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zonebyDayOfWeekbyHourOfDay/package.scala)
+ [How many people are usually in the zone?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zone/package.scala)
+ 
+ [How many people are usually in the zone around this hour?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByHourOfDay/package.scala)
+ 
+ [How many people are usually in the zone this day of week?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeek/package.scala)
+ 
+ [How many people are usually in the zone this day of week _around this hour_?](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/model/zoneByDayOfWeekByHourOfDay/package.scala)
