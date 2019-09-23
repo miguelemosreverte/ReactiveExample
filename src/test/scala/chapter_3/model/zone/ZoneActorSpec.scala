@@ -1,4 +1,4 @@
-package chapter_3.model.zone
+package chapter_4.model.zone
 
 import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, Instant, LocalDateTime, ZoneOffset}
@@ -7,9 +7,9 @@ import akka.RestartActorSupervisorFactory
 import akka.actor.{ActorRef, Kill}
 import akka.pattern.ask
 import akka.util.Timeout
-import chapter_3.model.zone.services.Queries.AverageOf
+import chapter_4.model.zone.services.Queries.AverageOf
 import ddd.{Response}
-import ddd.GeoAggregateRoot.GeoAggregateRoot.Command
+import ddd.GeoAggregateRoot.GeoAggregateRoot._
 import geojson.GeoPoint
 import org.scalatest.Assertion
 import utils.Spec
@@ -31,17 +31,14 @@ class ZoneActorSpec extends Spec {
 
   val deliveryId = 1
 
-  val random = new scala.util.Random
-  def randomPointInRecoleta = {
-    val minimalChange = 0//random.nextInt * 0.0000001
-    GeoPoint(-34.5886023 + minimalChange, -58.389601700000015 + minimalChange)
-  }
+
+  import utils.generators.RandomGeoPoints._
 
   "Passengers arrivals" should {
     "be reflected in ZoneActor state" in {
       for {
         a <- unitTest(
-          PassengerArrives(randomPointInRecoleta, deliveryId, givenDate),
+          PassengerArrivesZone(inRecoleta, deliveryId, givenDate),
           ZoneState(
             passengers = 1,
             Map(DayOfWeek.THURSDAY -> AverageOf(1, Set(perDay))),
@@ -50,7 +47,7 @@ class ZoneActorSpec extends Spec {
           )
         )
         b <- unitTest(
-          PassengerLeaves(randomPointInRecoleta, deliveryId, givenDate),
+          PassengerLeavesZone(inRecoleta, deliveryId, givenDate),
           ZoneState(
             passengers = 0,
             Map(DayOfWeek.THURSDAY -> AverageOf(1, Set(perDay))),
@@ -59,14 +56,14 @@ class ZoneActorSpec extends Spec {
           )
         )
 
-        _ <- update(PassengerArrives(randomPointInRecoleta, deliveryId, givenDate))
-        _ <- update(PassengerArrives(randomPointInRecoleta, deliveryId, givenDate))
-        _ <- update(PassengerArrives(randomPointInRecoleta, deliveryId, givenDate))
-        _ <- update(PassengerArrives(randomPointInRecoleta, deliveryId, nextThursday))
+        _ <- update(PassengerArrivesZone(inRecoleta, deliveryId, givenDate))
+        _ <- update(PassengerArrivesZone(inRecoleta, deliveryId, givenDate))
+        _ <- update(PassengerArrivesZone(inRecoleta, deliveryId, givenDate))
+        _ <- update(PassengerArrivesZone(inRecoleta, deliveryId, nextThursday))
 
         state <- getState()
-        actorSays <- zoneActor ? HowManyPeopleAreUsuallyToday(randomPointInRecoleta, givenDate)
-        actorSaysWithMoreSpecificity <- zoneActor ? HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek(randomPointInRecoleta, givenDate)
+        actorSays <- zoneActor ? HowManyPeopleAreUsuallyToday(inRecoleta, givenDate)
+        actorSaysWithMoreSpecificity <- zoneActor ? HowManyPeopleAreUsuallyTodayAtThisHourThisDayOfTheWeek(inRecoleta, givenDate)
 
       } yield assert(
         state.perDay(perDay.getDayOfWeek).avg == 2.5 
@@ -92,7 +89,7 @@ class ZoneActorSpec extends Spec {
     } yield state
   }
 
-  def getState(aggregateRoot: GeoPoint = randomPointInRecoleta): Future[ZoneState] =
+  def getState(aggregateRoot: GeoPoint = inRecoleta): Future[ZoneState] =
     (zoneActor ? GetState(aggregateRoot)).mapTo[ZoneState]
 
 

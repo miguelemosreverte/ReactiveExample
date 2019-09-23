@@ -1,5 +1,6 @@
 
 
+
 # tip of the spear '19
 Welcome!
 In this repository you will find the full implemention of a common use case pattern, one that comes as a replacement for another extensively proven pattern.
@@ -136,3 +137,11 @@ We are going to use Kafka instead. _Buckle up!_
 
 [Zone test with GeoPoint sharding](https://github.com/miguelemosreverte/ReactiveExample/blob/421cd09717b84604f133a4f8f9594a1c2877462a/src/test/scala/chapter_3/model/zone/ZoneActorSpec.scala)
 
+  #### III.VI Transaction Flow
+Given a **StartTrip** command the whole mechanism will come to life and a Taxi wil take the trip.
+When taking the passenger the taxi will inform that the person has left the Zone in which it was, and is directing onto another Zone. By knowing this each Zone can perform the bussiness intelligence required to know how many people are inside them about to take trips each day, each hour, and each hour of each day. Zone is a ReadSide for complex queries, _queries that would perform very slowly if computed from the ground up, but are instantaneus_ thanks to the way Akka stores the intermediates results.
+![representation]([https://i.imgur.com/3KIHwgo.png](https://i.imgur.com/3KIHwgo.png))
+
+[Transaction Flow](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/chapter_3/transactionFlow/TransactionFlow.scala)
+
+[Transaction Flow Spec](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/chapter_3/transactionFlow/TransactionFlowSpec.scala)

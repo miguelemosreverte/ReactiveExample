@@ -1,11 +1,11 @@
-package chapter_3.model.zone
+package chapter_4.model.zone
 
 import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, LocalDateTime}
 
 import ddd.{AbstractState, Event}
 
-import chapter_3.model.zone.services.Queries._
+import chapter_4.model.zone.services.Queries._
 
 case class ZoneState(
                       passengers: Long,

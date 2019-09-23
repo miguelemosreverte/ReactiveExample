@@ -12,7 +12,7 @@ import introduction.ImperfectActor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
-import transaction.Transaction.□
+import chapter_1.transaction.Transaction.□
 import utils.DocsSpecBase
 
 import scala.concurrent.Future
@@ -54,7 +54,7 @@ class TransactionSpec extends DocsSpecBase(9095) {
     def getReply(message: Message): Future[Seq[Message]] =
       (imperfectActor ? message).mapTo[Message]
 
-    val flow = □[Message, Message](sourceTopic, sinkTopic, getReply).run()
+    val flow = □[Message, Message](sourceTopic, sinkTopic, getReply)
     val control = flow._1
     val results = flow._2
 

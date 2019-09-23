@@ -1,9 +1,9 @@
-package chapter_3.model.zone
+package chapter_4.model.zone
 
 import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, Instant, LocalDateTime, ZoneOffset}
 
-import chapter_3.model.zone.services.Queries.AverageOf
+import chapter_4.model.zone.services.Queries.AverageOf
 import ddd.Event
 import org.scalatest.{MustMatchers, WordSpec}
 
@@ -41,8 +41,8 @@ class ZoneStateSpec extends WordSpec with MustMatchers {
 
   val nextThursday = givenDate.plus(7, ChronoUnit.DAYS).truncatedTo(ChronoUnit.HOURS)
 
-  "Updating the same obligation for a 'sujetoID' multiple times" should {
-    "keep the saldo of the last update" in {
+  "Updating ZoneState" should {
+    "work as intended" in {
       val result = for {
         s1 <- unitTest(
           Arrived(givenDate), ZoneState(

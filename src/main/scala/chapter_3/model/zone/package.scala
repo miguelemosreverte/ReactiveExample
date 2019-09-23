@@ -1,9 +1,9 @@
-package chapter_3.model
+package chapter_4.model
 
 import java.time.LocalDateTime
 
-import ddd._
 import ddd.GeoAggregateRoot.GeoAggregateRoot._
+import ddd._
 import geojson.GeoPoint
 
 package object zone {
@@ -12,35 +12,51 @@ package object zone {
   case class Zone(id: String)
 
   // Events
-  case class Arrived(timestamp: LocalDateTime) extends Event {
+  sealed trait ZoneEventsFamily
+
+  case class Arrived(timestamp: LocalDateTime) extends Event with ZoneEventsFamily {
     def name = "Arrived"
   }
 
-  case class Left(timestamp: LocalDateTime) extends Event {
+  case class Left(timestamp: LocalDateTime) extends Event with ZoneEventsFamily {
     def name = "Left"
   }
 
-  // Commands
-  case class PassengerArrives(
-                               aggregateRoot: GeoPoint,
-                               deliveryId: BigInt,
-                               timestamp: LocalDateTime)
-    extends Command
+  sealed trait ZoneCommandFamily {
+    def aggregateRoot: GeoPoint
 
-  case class PassengerLeaves(
-                              aggregateRoot: GeoPoint,
-                              deliveryId: BigInt,
-                              timestamp: LocalDateTime)
-    extends Command
+    def deliveryId: BigInt
+
+    def timestamp: LocalDateTime
+  }
+
+  // Commands
+  case class PassengerArrivesZone(
+                                   aggregateRoot: GeoPoint,
+                                   deliveryId: BigInt,
+                                   timestamp: LocalDateTime)
+    extends Command with ZoneCommandFamily
+
+  case class PassengerLeavesZone(
+                                  aggregateRoot: GeoPoint,
+                                  deliveryId: BigInt,
+                                  timestamp: LocalDateTime)
+    extends Command with ZoneCommandFamily
 
   // Response
-  case class ArriveSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response
 
-  case class LeaveSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response
+  sealed trait ZoneResponseFamily {
+    def deliveryId: BigInt
+
+    def timestamp: LocalDateTime
+  }
+
+  case class ArrivalSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response with ZoneResponseFamily
+
+  case class LeaveSuccess(deliveryId: BigInt, timestamp: LocalDateTime) extends Response with ZoneResponseFamily
 
 
   // Queries
-  case class GetState(aggregateRoot: GeoPoint) extends Query
 
   //How many people are usually in the zone?
   case class HowManyPeopleAreUssuallyInTheZone(aggregateRoot: GeoPoint) extends Query
@@ -66,6 +82,7 @@ package object zone {
                                                                      aggregateRoot: GeoPoint,
                                                                      day: LocalDateTime) extends Query {
     def toDayOfWeek = day.getDayOfWeek
+
     def toHour = day.getHour
   }
 

@@ -1,4 +1,4 @@
-package chapter_3.model.zone
+package chapter_4.model.zone
 
 import java.time.LocalDateTime
 
@@ -6,7 +6,7 @@ import akka.ShardedEntity
 import akka.actor.Props
 import akka.persistence.{PersistentActor, SnapshotOffer}
 import ddd.{Event}
-import ddd.StringAggregateRoot.StringAggregateRoot.{GetState => NormalGetState}
+import ddd.GeoAggregateRoot.GeoAggregateRoot.GetState
 
 class ZoneActor extends PersistentActor {
 
@@ -20,14 +20,14 @@ class ZoneActor extends PersistentActor {
   )
 
   override def receiveCommand: Receive = {
-    case PassengerArrives(aggregateRoot, deliveryId, timestamp) =>
+    case PassengerArrivesZone(aggregateRoot, deliveryId, timestamp) =>
       val evt = Arrived(timestamp)
       persist(evt) { e =>
         state += e
-        val response = ArriveSuccess(deliveryId, timestamp)
+        val response = ArrivalSuccess(deliveryId, timestamp)
         sender() ! response
       }
-    case PassengerLeaves(aggregateRoot, deliveryId, timestamp) =>
+    case PassengerLeavesZone(aggregateRoot, deliveryId, timestamp) =>
       val evt = Left(timestamp)
       persist(evt) { e =>
         state += e
@@ -38,8 +38,6 @@ class ZoneActor extends PersistentActor {
     case GetState(aggregateRoot) =>
       sender() ! state
 
-    case NormalGetState(aggregateRoot) =>
-      sender() ! state
 
     case a:HowManyPeopleAreUsuallyToday =>
       sender() ! state.perDay(a.toDayOfWeek).avg

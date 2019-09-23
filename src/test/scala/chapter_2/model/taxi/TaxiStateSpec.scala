@@ -1,11 +1,13 @@
 package chapter_2.model.taxi
 
+import ddd.Event
+import geojson.GeoPoint
 import org.scalatest.{MustMatchers, WordSpec}
 
 object TaxiStateSpec extends MustMatchers {
 
   def unitTest(
-                event: Located,
+                event: Event,
                 expectedState: TaxiState
               ): scalaz.State[TaxiState, Unit] = scalaz.State { s =>
 
@@ -21,13 +23,13 @@ class TaxiStateSpec extends WordSpec with MustMatchers {
 
   import TaxiStateSpec._
 
-  val seed = TaxiState(Coordinate(0, 0))
+  val seed = TaxiState(GeoPoint(0,0))
 
-  "Updating the same obligation for a 'sujetoID' multiple times" should {
-    "keep the saldo of the last update" in {
+  "Updating TaxiState" should {
+    "reflect changes" in {
       val result = for {
         s1 <- unitTest(
-          Located(Coordinate(1, 1)), TaxiState(Coordinate(1, 1))
+          TookPassenger(GeoPoint(1, 1)), TaxiState(GeoPoint(1, 1))
         )
       } yield s1
       result.run(seed)

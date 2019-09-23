@@ -3,8 +3,7 @@ import scoverage.ScoverageSbtPlugin
 import scala.Console._
 
 lazy val commonSettings = Seq(
-    organization := "io.weetek",
-    name := "pcs",
+    name := "ReactiveExample",
     version := "1.0"
 )
 
@@ -14,8 +13,7 @@ lazy val pcs =
         .settings(modulesSettings)
         .settings(
             fork in run := true,
-            mainClass in (Compile, run) := Some("Main"),
-            addCommandAlias("weetekio", "run")
+            mainClass in (Compile, run) := Some("Main")
         )
         .settings(
           scalacOptions ++= Seq(

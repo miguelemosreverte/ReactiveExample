@@ -6,7 +6,8 @@ import akka.pattern.ask
 import akka.util.Timeout
 import chapter_2.model.taxi.taxiDriver.TaxiDriverState
 import chapter_2.model.taxiDriver.{ChangeDriver, Driver}
-import ddd.StringAggregateRoot.StringAggregateRoot.GetState
+import ddd.StringAggregateRoot.StringAggregateRoot.{Command, GetState}
+import geojson.GeoPoint
 import org.scalatest.Assertion
 import utils.Spec
 
@@ -26,7 +27,7 @@ class TaxiActorSpec extends Spec {
     "be reflected in TaxiActor state" in {
       for {
         a <- unitTest(
-          SetLocation("1", 1, Coordinate(1, 1)), TaxiState(Coordinate(1, 1))
+          TakePassenger("1", 1, GeoPoint(1, 1)), TaxiState(GeoPoint(1, 1))
         )
       } yield a
     }
@@ -52,11 +53,11 @@ class TaxiActorSpec extends Spec {
 
   type aggregateRoot = String
 
-  def update(a: SetLocation): Future[SetLocationSuccess] =
-    (taxiActor ? a).mapTo[SetLocationSuccess]
+  def update(a: Command): Future[TakePassengerSuccess] =
+    (taxiActor ? a).mapTo[TakePassengerSuccess]
 
 
-  def set(a: SetLocation): Future[TaxiState] = {
+  def set(a: Command): Future[TaxiState] = {
     for {
       response <- update(a)
       _ <- kill
@@ -76,7 +77,7 @@ class TaxiActorSpec extends Spec {
   }
 
   def unitTest(
-                command: SetLocation,
+                command: Command,
                 expectedState: TaxiState
               ): Future[Assertion] =
 

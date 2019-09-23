@@ -1,9 +1,9 @@
-package chapter_3.model.zone.services
+package chapter_4.model.zone.services
 
 import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, LocalDateTime}
 
-import chapter_3.model.zone.{Arrived, Left, ZoneState}
+import chapter_4.model.zone.{Arrived, Left, ZoneState}
 import ddd.Event
 
 object Queries {

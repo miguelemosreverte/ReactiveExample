@@ -11,23 +11,33 @@ import ddd.Event
 import scala.concurrent.duration._
 import akka.pattern.{ask, pipe}
 import ddd.StringAggregateRoot.StringAggregateRoot.GetState
+import geojson.GeoPoint
 
 class TaxiActor extends PersistentActor {
   import TaxiActor._
-  private var state = TaxiState(Coordinate(0,0))
+  private var state = TaxiState(GeoPoint(0,0))
   implicit val ec = context.system.dispatcher
   implicit val timeout: Timeout = 1 second
 
   val taxiDriver: ActorRef = context.actorOf(TaxiDriver.props())
 
   override def receiveCommand: Receive = {
-    case SetLocation(aggregateRoot,deliveryId,location) =>
-      val evt = Located(location)
+    case TakePassenger(aggregateRoot,deliveryId,location) =>
+      val evt = TookPassenger(location)
       persist(evt) { e =>
         state += e
-        val response = SetLocationSuccess(deliveryId, location)
+        val response = TakePassengerSuccess(deliveryId, location)
         sender() ! response
       }
+
+    case DropPassenger(aggregateRoot,deliveryId,location) =>
+      val evt = DroppedPassenger(location)
+      persist(evt) { e =>
+        state += e
+        val response = DropPassengerSuccess(deliveryId, location)
+        sender() ! response
+      }
+
     case GetState(aggregateRoot) =>
       sender() ! state
 

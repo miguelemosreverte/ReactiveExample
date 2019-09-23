@@ -1,15 +1,10 @@
-package transaction
+package chapter_1.transaction
 
-import java.io
-
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.kafka.scaladsl.Transactional
 import akka.kafka.{ProducerMessage, _}
-import akka.pattern.ask
-import akka.stream.scaladsl.{Keep, RestartSource, RunnableGraph, Sink}
+import akka.stream.scaladsl.{Keep, RestartSource, Sink}
 import akka.stream.{ActorMaterializer, KillSwitches, Materializer, UniqueKillSwitch}
-import akka.util.Timeout
-import introduction.ImperfectActor
 import org.apache.kafka.clients.producer.ProducerRecord
 import serialization.json.JsonSerializer
 
@@ -17,6 +12,7 @@ import scala.collection.immutable
 import scala.concurrent.{ExecutionContext, Future}
 
 object Transaction {
+
 
   def □[Input, Output](
                         SOURCE_TOPIC: String,
@@ -28,7 +24,7 @@ object Transaction {
                         producer: ProducerSettings[String, String],
                         decoder: JsonSerializer[Input],
                         encoder: JsonSerializer[Output]
-                      ): RunnableGraph[(UniqueKillSwitch, Future[immutable.Seq[Seq[String]]])] = {
+                      ): (UniqueKillSwitch, Future[immutable.Seq[Seq[String]]]) = {
 
     type Msg = ConsumerMessage.TransactionalMessage[String, String]
 
@@ -71,7 +67,14 @@ object Transaction {
           }
         }.map {
 
-        case Left(a) => throw new RuntimeException("Uh oh.. intentional exception. Let's restart the entire stream.")
+        case Left(cause) => throw new RuntimeException(
+          s"""
+             Uh oh.. intentional exception. Let's restart the entire stream.
+
+
+             ${Console.RED} $cause ${Console.RESET}
+
+          """)
         case Right(output) =>
           ProducerMessage.multi(
             records = output.map { o =>
@@ -94,6 +97,7 @@ object Transaction {
 
       }
       .toMat(Sink.seq[Seq[String]])(Keep.both)
+      .run()
 
   }
 
